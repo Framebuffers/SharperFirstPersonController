@@ -14,17 +14,17 @@
 
 - 🗃️ **Much cleaner and understandable file structure.**
 	- Project is split into 4 files, plus the debug TextPanel:
-	- CameraFirstPerson.cs: contains all variables shared by the class, a separate definition for your InputMap keys, and all code related to Godot's loops.
+	- `CameraFirstPerson.cs` contains all variables shared by the class, a separate definition for your `InputMap` keys, and all code related to Godot's loops.
 		- `CameraFirstPerson.Animation.cs` contains everything related to animation.
 		- `CameraFirstPerson.Camera.cs` contains everything related to camera movement, motion smoothing, and other features.
-		- `CameraFirstPerson.ItemDetection.cs` a new adition to this asset! Detects items with an Area3D in front of the camera's centre (where the Reticle would go).
-    		- `TextPanel.cs` script for the debug TextPanel.
+		- `CameraFirstPerson.ItemDetection.cs` a new adition to this asset! Detects items with an `Area3D` in front of the camera's centre (where the Reticle would go).
+    		- `TextPanel.cs` script for the debug `TextPanel`.
 		- Functionality is split into smaller methods. Not a lot of them, but just enough to understand what's going on, and separate functionality away from the main file. Everything is made to ease readability.
 		- Code now complies (almost 100%) to C#'s code styleguides.
 - 🎯 **Object detection!**
 	- This project comes from a personal project, where I cleaned up and refactored the code. This is an extra feature that comes for free!
 		- Means that some of the terminology fits my needs, which sound weird out of context. Needs a bit of work in this aspect.
-	- Works by casting a ray from the camera centre to the nearest Area3D, and emits a ShowItem or HideItem signal (these are new to this asset).
+	- Works by casting a ray from the camera centre to the nearest `Area3D`, and emits a `ShowItem` or `HideItem` signal (these are new to this asset).
 	- A `HideItem()` and `ShowItem()` signal will appear on the editor. Connect anything you need: `ShowItem()` works when an `Area3D` is detected, `HideItem()` when its not.
 		- In this case, I use a special Collision layer/mask pair assigned for this use. If you want to use this on your project, this is a good idea.
 - ⚠️ **Differences:**
