@@ -27,6 +27,7 @@
 	- Works by casting a ray from the camera centre to the nearest `Area3D`, and emits a `ShowItem` or `HideItem` signal (these are new to this asset).
 	- A `HideItem()` and `ShowItem()` signal will appear on the editor. Connect anything you need: `ShowItem()` works when an `Area3D` is detected, `HideItem()` when its not.
 		- In this case, I use a special Collision layer/mask pair assigned for this use. If you want to use this on your project, this is a good idea.
+  - 📷 **Camera is now clamped from going upside down.** The parameters for this feature are in `CameraFirstPerson.Camera.cs`
 - ⚠️ **Differences:**
 	- Hooking up to controls.
 		- The original has a `Controls` exported category of strings, on which you wrote what you had on your own Project Settings.
