@@ -1,18 +1,24 @@
 using Godot;
 
+/// <summary>
+/// A character which includes movement, a camera, and item detection into one Node.
+/// </summary>
 public sealed partial class CameraFirstPerson : CharacterBody3D
 {
   private AnimationPlayer HeadbobAnimation;
   private AnimationPlayer JumpAnimation;
   private AnimationPlayer CrouchAnimation;
 
-  [Export(PropertyHint.Enum, "Hold to Crouch, Toggle Crouch")] public int crouchMode = 0;
-  [Export(PropertyHint.Enum, "Hold to Sprint, Toggle Sprint")] public int sprintMode = 0;
+  [Export(PropertyHint.Enum, "Hold to Crouch, toggle Crouch")] public int crouchMode = 0;
+  [Export(PropertyHint.Enum, "Hold to Sprint, toggle Sprint")] public int sprintMode = 0;
   [Export] bool dynamicFOV = true;
   [Export] bool continuousJumping = true;
   [Export] bool viewBobbing = true;
   [Export] bool jumpAnimation = true;
 
+  /// <summary>
+  /// Loads references to AnimationPlayer nodes inside the Scene.
+  /// </summary>
   private void InitAnimations()
   {
     CrouchAnimation = GetNode<AnimationPlayer>("CrouchAnimation");
@@ -24,6 +30,10 @@ public sealed partial class CameraFirstPerson : CharacterBody3D
     CrouchAnimation.Play("RESET");
   }
 
+  /// <summary>
+  /// Loop to determine which animations to play each cycle.
+  /// </summary>
+  /// <param name="inputDir">Direction on which the player's moving towards.</param>
   private void ProcessFinalMovement(Vector2 inputDir)
   {
     if (dynamicFOV) { UpdateCameraFOV(); }
@@ -40,7 +50,10 @@ public sealed partial class CameraFirstPerson : CharacterBody3D
     }
   }
 
-  // NOTE: Headbobbing animation while moving.
+  /// <summary>
+  /// Checks for conditions and plays the headbobbing animation. Note that the playback is randomised to create a more natural bobbing effect.
+  /// </summary>
+  /// <param name="moving">Is the player moving?</param>
   private void RunHeadbobAnimation(bool moving)
   {
     if (moving && IsOnFloor())
@@ -60,6 +73,12 @@ public sealed partial class CameraFirstPerson : CharacterBody3D
     }
   }
 
+  /// <summary>
+  /// If motion smoothing is enabled, performs a linear interpolation between points of origin and destination, weighted by the acceleration factor and the delta between frames.
+  /// </summary>
+  /// <param name="currentVelocity">How fast is the player moving?</param>
+  /// <param name="delta">Delta between frames obtained from _PhysicsProcess()</param>
+  /// <param name="direction">Where is the player going?</param>
   private void ProcessMovementSmoothing(Vector3 currentVelocity, double delta, Vector3 direction)
   {
     // NOTE: motion smoothing: lerps direction changes

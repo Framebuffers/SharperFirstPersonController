@@ -1,9 +1,18 @@
 using Godot;
 
+/// <summary>
+/// Debug panel. Shows diagnostic data.
+/// </summary>
 public partial class TextPanel : Godot.PanelContainer
 {
   public VBoxContainer BoxContainer { get => GetNode<VBoxContainer>("MarginContainer/VBoxContainer"); }
 
+  /// <summary>
+  /// Loads text onto the panel.
+  /// </summary>
+  /// <param name="title">A key to prepend before a message sent to the panel, like a title or a suffix.</param>
+  /// <param name="value">Message to load.</param>
+  /// <param name="order">If more messages are present, text can be loaded onto an specific place inside the text queue.</param>
   public void AddProperty(string title, string value, int order)
   {
     if (BoxContainer is VBoxContainer)
@@ -26,6 +35,10 @@ public partial class TextPanel : Godot.PanelContainer
     }
   }
 
+  /// <summary>
+  /// Loads text onto the panel.
+  /// </summary>
+  /// <param name="text">Text to display.</param>
   public void AddProperty(string text)
   {
     if (BoxContainer is VBoxContainer)
@@ -38,6 +51,9 @@ public partial class TextPanel : Godot.PanelContainer
     }
   }
 
+  /// <summary>
+  /// Load a reference to the container and setup the positioning and look of the container.
+  /// </summary>
   public override void _Ready()
   {
     MarginContainer container = GetNode<MarginContainer>("MarginContainer");
@@ -50,6 +66,9 @@ public partial class TextPanel : Godot.PanelContainer
     container.OffsetBottom = -targetSize.Y;
   }
 
+  /// <summary>
+  /// Unload text from the container.
+  /// </summary>
   public void RemoveProperties()
   {
     if (BoxContainer.GetType() == typeof(VBoxContainer))

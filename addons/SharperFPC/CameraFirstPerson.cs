@@ -17,38 +17,33 @@ public sealed partial class CameraFirstPerson : CharacterBody3D
   private bool immobile = false;
   Vector3 initial_facing_direction = Vector3.Zero;
 
-  // TODO: decouple controls from strings into const strings.
   [ExportGroup("Controls")]
-  [Export] string JUMP = "jump";
-  [Export] string LEFT = "move_left";
-  [Export] string RIGHT = "move_right";
-  [Export] string FORWARD = "move_forward";
-  [Export] string BACKWARD = "move_back";
-  [Export] string PAUSE = "pause";
-  [Export] string CROUCH = "crouch";
-  [Export] string SPRINT = "sprint";
+  [Export] string jump = "jump";
+  [Export] string left = "move_left";
+  [Export] string right = "move_right";
+  [Export] string forward = "move_forward";
+  [Export] string backward = "move_back";
+  [Export] string pause = "pause";
+  [Export] string crouch = "crouch";
+  [Export] string sprint = "sprint";
 
   [ExportGroup("Feature Settings")]
-  [Export] bool debugMode = true; // NOTE: sends data to a Control node, with FPS data.
+  [Export] bool debugMode = true;
   [Export] bool jumpingEnabled = true;
   [Export] bool inAirMomentum = true;
   [Export] bool motionSmoothing = true;
   [Export] bool sprintEnabled = true;
   [Export] bool crouchEnabled = true;
 
-
-  // TODO: Clean up repeated member variables.
   // Member variables
   float speed;
-  float currentSpeed = 0.0f;
-  // TODO: handle states cleaner.
-  // States: normal, crouching, sprinting
-  string state = "normal"; // NOTE: use an enum.
-
-  // Get the gravity from the project settings to be synced with RigidBody nodes.
-  // TODO: push all the static paths onto a separate file for easier access.
+  float currentSpeed = 0.0f;  // States: normal, crouching, sprinting
+  string state = "normal";
   public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 
+  /// <summary>
+  /// Load references to Nodes, call for animations to start from zero, load ItemDetection references, capture the mouse and look straight ahead.
+  /// </summary>
   public override void _Ready()
   {
     base._Ready();
@@ -61,6 +56,14 @@ public sealed partial class CameraFirstPerson : CharacterBody3D
     InitCamera();
   }
 
+  /// <summary>
+  /// The _PhysicsProcess() is the most important one in this Controller.
+  /// First, the current speed is stored and a check is performed if an Area3D with the corresponding mask value is in front of the camera.
+  /// After that, movement is processed based on keys currently pressed, gravity, delta between frames, and if something is colliding with the head.
+  /// Depending on key and movement combination, one of three states is reached: normal, crouching or sprinting.
+  /// Finally, headbobbing is processed and the loop starts again.
+  /// </summary>
+  /// <param name="delta">Time between frames.</param>
   public override void _PhysicsProcess(double delta)
   {
     currentSpeed = Vector3.Zero.DistanceTo(GetRealVelocity());
@@ -71,49 +74,44 @@ public sealed partial class CameraFirstPerson : CharacterBody3D
     DetectItems();
 
     // Gravity
-    //  If the gravity changes during your game, uncomment this code
+    // If the gravity changes during your game, uncomment this code
     // gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
-    // NOTE: Gravity calc.
+
     Vector3 currentVelocity = Velocity;
     if (!IsOnFloor())
     {
       currentVelocity.Y -= (float)(gravity * delta);
     }
-
-    // NOTE: jump check
     else if (jumpingEnabled)
     {
-      if (continuousJumping ? Input.IsActionPressed(JUMP) : Input.IsActionJustPressed(JUMP))
+      if (continuousJumping ? Input.IsActionPressed(jump) : Input.IsActionJustPressed(jump))
       {
         if (IsOnFloor() && !lowCeiling)
         {
-          if (JumpAnimation != null)
-          {
-            JumpAnimation.Play("jump");
-          }
+          JumpAnimation?.Play("jump");
           currentVelocity.Y += jumpVelocity;
         }
       }
     }
+
     Velocity = currentVelocity;
 
-    // NOTE: movement processing
-    Vector2 inputDir = immobile ? Vector2.Zero : Input.GetVector(LEFT, RIGHT, FORWARD, BACKWARD);
+    // Movement processing.
+    Vector2 inputDir = immobile ? Vector2.Zero : Input.GetVector(left, right, forward, backward);
     Vector2 direction2D = inputDir.Rotated(-Head.Rotation.Y);
-    Vector3 direction = new Vector3(direction2D.X, 0, direction2D.Y);
+    Vector3 direction = new(direction2D.X, 0, direction2D.Y);
     direction = direction.Normalized();
     MoveAndSlide();
     ProcessMovementSmoothing(currentVelocity, delta, direction);
 
-    // NOTE: state processing (running, crouching, standing)
-    // not touching this anytime soon because it breaks so easily.
+    // State processing (running, crouching, standing)
     lowCeiling = CeilingDetection.IsColliding();
     bool moving = inputDir != Vector2.Zero;
     if (sprintEnabled)
     {
       if (sprintMode == 0)
       {
-        if (Input.IsActionPressed(SPRINT) && state != "crouching")
+        if (Input.IsActionPressed(sprint) && state != "crouching")
         {
           if (moving)
           {
@@ -139,11 +137,11 @@ public sealed partial class CameraFirstPerson : CharacterBody3D
       {
         if (moving)
         {
-          if (Input.IsActionPressed(SPRINT) && state == "normal")
+          if (Input.IsActionPressed(sprint) && state == "normal")
           {
             SprintState();
           }
-          if (Input.IsActionJustPressed(SPRINT))
+          if (Input.IsActionJustPressed(sprint))
           {
             switch (state)
             {
@@ -168,7 +166,7 @@ public sealed partial class CameraFirstPerson : CharacterBody3D
     {
       if (crouchMode == 0)
       {
-        if (Input.IsActionPressed(CROUCH) && state != "sprinting")
+        if (Input.IsActionPressed(crouch) && state != "sprinting")
         {
           if (state != "crouching")
           {
@@ -182,7 +180,7 @@ public sealed partial class CameraFirstPerson : CharacterBody3D
       }
       else if (crouchMode == 1)
       {
-        if (Input.IsActionJustPressed(CROUCH))
+        if (Input.IsActionJustPressed(crouch))
         {
           switch (state)
           {
@@ -201,11 +199,13 @@ public sealed partial class CameraFirstPerson : CharacterBody3D
       }
     }
 
-    // NOTE: Movement animation
+    // Movement animation
     ProcessFinalMovement(inputDir);
   }
 
-  // NOTE: state processing: standing up doing nothing.
+  /// <summary>
+  /// State processing: standing up doing nothing.
+  /// </summary>
   private void NormalState()
   {
     string previousState = state;
@@ -217,7 +217,9 @@ public sealed partial class CameraFirstPerson : CharacterBody3D
     speed = baseSpeed;
   }
 
-  // NOTE: state processing: running.
+  /// <summary>
+  /// State processing: running. 
+  /// </summary>
   private void SprintState()
   {
     string previousState = state;
@@ -229,7 +231,9 @@ public sealed partial class CameraFirstPerson : CharacterBody3D
     speed = sprintSpeed;
   }
 
-  // NOTE: state processing: crouching.
+  /// <summary>
+  /// State processing: crouching. 
+  /// </summary>
   private void CrouchState()
   {
     string previousState = state;
@@ -238,26 +242,33 @@ public sealed partial class CameraFirstPerson : CharacterBody3D
     CrouchAnimation.Play("crouch");
   }
 
+  /// <summary>
+  /// State processing: pause. If the pause key is pressed (in this case, P), mouse is released.
+  /// </summary>
   private void HandlePause()
   {
-    // NOTE: releases the mouse from the window.
-    if (Input.IsActionJustPressed(PAUSE))
+    if (Input.IsActionJustPressed(pause))
       Input.MouseMode = (Input.MouseMode == Input.MouseModeEnum.Captured) ? Input.MouseModeEnum.Visible : Input.MouseModeEnum.Captured;
   }
 
+  /// <summary>
+  /// Check if the game is paused, make sure the camera does not go too far back as to turn it upside down, and load debug details if needed.
+  /// </summary>
+  /// <param name="delta"></param>
   public override void _Process(double delta)
   {
     HandlePause();
     ClampCamera();
-
     DebugPanel.AddProperty("FPS", $"{Performance.GetMonitor(Performance.Monitor.TimeFps)}", 0);
     DebugPanel.AddProperty("state", $"{state}" + (!IsOnFloor() ? " in the air" : ""), 4);
   }
 
+  /// <summary>
+  /// Handle camera rotation and item detection events.
+  /// </summary>
+  /// <param name="event"></param>
   public override void _UnhandledInput(InputEvent @event)
   {
-    // NOTE: rotates the camera upon receiving a mouse input.
-    //
     switch (@event)
     {
       case InputEventMouseMotion:

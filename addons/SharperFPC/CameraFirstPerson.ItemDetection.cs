@@ -19,12 +19,12 @@ public sealed partial class CameraFirstPerson : CharacterBody3D
     CeilingDetection = GetNode<ShapeCast3D>("CrouchCeilingDetection");
   }
 
-
-  // NOTE: Item detection. Now this one is very complex and needs to be split up.
-  // It casts a ray from the camera centre to the nearest Area3D, and emits the ShowItem or HideItem signal.
-  // These should be more "generic" since they can be useful to detect _anything_ in front of the camera.
-  // Right now it is coupled to one type <Area3D>, but should be able to extend to other types.
-  // Other ideas involve: returning the collider, querying data from PhysicsServer3D, etc.
+  /// <summary>
+  /// Casts a ray from the camera centre to the nearest Area3D, and emits the ShowItem or HideItem signal.
+  /// These should be more "generic" since they can be useful to detect _anything_ in front of the camera.
+  /// Right now it is coupled to one type Area3D, but should be able to extend to other types.
+  /// Other ideas involve: returning the collider, querying data from PhysicsServer3D, etc.
+  /// </summary>
   private void DetectItems()
   {
     var spaceState = GetWorld3D().DirectSpaceState;
@@ -55,6 +55,10 @@ public sealed partial class CameraFirstPerson : CharacterBody3D
     }
   }
 
+  /// <summary>
+  /// Emit signals depending on am itemDetected flag.
+  /// Whenever the Area3D is no longer within the ray's detection are, the HideItem signal is sent. 
+  /// </summary>
   private void HandleItemDetection()
   {
     GD.Print($"Item enabled: {itemEnabled}\nItem detected: {itemDetected}");
