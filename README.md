@@ -3,21 +3,21 @@ A cleaner implementation of [quality-first-person-controller-2](https://github.c
 [Click here for a link to the original asset.](https://godotengine.org/asset-library/asset/2418)
 
 ## Versions:
-	- **1.0:** Initial release!
-		- Cleanup
-		- Object detection 
-		- Debug features moved to a single C# class (`TextPanel`)
-		- **BIG TODO: RETICLES**
+- **1.0:** Initial release!
+	- Cleanup
+	- Object detection 
+	- Debug features moved to a single C# class (`TextPanel`)
+	- **BIG TODO: RETICLES**
 
 ## Description
-This is a cleaner version of the C# translation of Quality First Person Controller v2. It improves over the original by:
-	- **Much** cleaner and understandable file structure.
-		- Project is split into 4 files, plus the debug TextPanel:
-			- CameraFirstPerson.cs: contains all variables shared by the class, a separate definition for your InputMap keys, and all code related to Godot's loops.
-			- CameraFirstPerson.Animation.cs: contains everything related to animation.
-			- CameraFirstPerson.Camera.cs: contains everything related to camera movement, motion smoothing, and other features.
-			- CameraFirstPerson.ItemDetection.cs: a new adition to this asset! Detects items with an Area3D in front of the camera's centre (where the Reticle would go).
-			- TextPanel.cs: script for the debug TextPanel.
+An even better First Person Controller written in C# for Godot 4.3+
+- **Much** cleaner and understandable file structure.
+	- Project is split into 4 files, plus the debug TextPanel:
+	- CameraFirstPerson.cs: contains all variables shared by the class, a separate definition for your InputMap keys, and all code related to Godot's loops.
+		- CameraFirstPerson.Animation.cs: contains everything related to animation.
+		- CameraFirstPerson.Camera.cs: contains everything related to camera movement, motion smoothing, and other features.
+		- CameraFirstPerson.ItemDetection.cs: a new adition to this asset! Detects items with an Area3D in front of the camera's centre (where the Reticle would go).
+    		- TextPanel.cs: script for the debug TextPanel.
 		- Functionality is split into smaller methods. Not a lot of them, but just enough to understand what's going on, and separate functionality away from the main file. Everything is made to ease readability.
 		- Code now complies (almost 100%) to C#'s code styleguides.
 	- Object detection!
