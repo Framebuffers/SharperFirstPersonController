@@ -6,6 +6,10 @@
 ☕ If you liked it, [I have a Ko-Fi](https://ko-fi.com/framebuffer). The more caffeine (and bills paid), the more fun Godot stuff I can produce!
 
 ## 💻 Versions:
+- **1.01** Preparing for release on the Asset Library.
+    - 📝 Added documentation for each method: what it does and what it needs to work.
+    - 🧹 Cleaning up code to further comply with C# code style guides.
+    - 💻 Minor syntax improvements.  
 - **1.0:** Initial release!
 	- 🧼 Cleanup
 	- 🎯 Object detection 
@@ -20,7 +24,7 @@
 		- `CameraFirstPerson.Animation.cs` contains everything related to animation.
 		- `CameraFirstPerson.Camera.cs` contains everything related to camera movement, motion smoothing, and other features.
 		- `CameraFirstPerson.ItemDetection.cs` a new adition to this asset! Detects items with an `Area3D` in front of the camera's centre (where the Reticle would go).
-    		- `TextPanel.cs` script for the debug `TextPanel`.
+			- `TextPanel.cs` script for the debug `TextPanel`.
 		- Functionality is split into smaller methods. Not a lot of them, but just enough to understand what's going on, and separate functionality away from the main file. Everything is made to ease readability.
 		- Code now complies (almost 100%) to C#'s code styleguides.
 - 🎯 **Object detection!**
