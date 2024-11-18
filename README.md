@@ -3,6 +3,8 @@
 
 [Click here for a link to the original asset.](https://godotengine.org/asset-library/asset/2418)
 
+☕ If you liked it, [I have a Ko-Fi](https://ko-fi.com/framebuffer). The more caffeine (and bills paid), the more fun Godot stuff I can produce!
+
 ## 💻 Versions:
 - **1.0:** Initial release!
 	- 🧼 Cleanup
