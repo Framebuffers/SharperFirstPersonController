@@ -1,22 +1,21 @@
-[gd_scene load_steps=22 format=3 uid="uid://cc1m2a1obsyn4"]
+[gd_scene load_steps=19 format=3 uid="uid://cc1m2a1obsyn4"]
 
-[ext_resource type="Script" path="res://Players/Player.cs" id="1_5petg"]
-[ext_resource type="Shader" path="res://Shader/psx_camera_shader.gdshader" id="2_n6d4a"]
-[ext_resource type="Environment" uid="uid://ba6ow6vhe2box" path="res://Environment/TT_Env.tres" id="2_urgvr"]
+[ext_resource type="Script" path="res://addons/SharperFPC/CameraFirstPerson.cs" id="1_aaow4"]
+[ext_resource type="PackedScene" uid="uid://r51ub3p51x5q" path="res://addons/SharperFPC/TextPanel.tscn" id="2_2i34k"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kp17n"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gpv5g"]
 albedo_color = Color(0.909804, 0.596078, 0, 1)
 clearcoat_enabled = true
 clearcoat_roughness = 0.2
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_jw1de"]
-material = SubResource("StandardMaterial3D_kp17n")
+material = SubResource("StandardMaterial3D_gpv5g")
 radius = 0.12
 height = 1.5
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_uy03j"]
+margin = 0.01
 radius = 0.1
-height = 1.5
 
 [sub_resource type="Animation" id="Animation_j8cx7"]
 resource_name = "RESET"
@@ -36,7 +35,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Collision:scale")
+tracks/1/path = NodePath("Collider:scale")
 tracks/1/interp = 2
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -60,7 +59,7 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("Collision:position")
+tracks/3/path = NodePath("Collider:position")
 tracks/3/interp = 2
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -100,7 +99,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Collision:scale")
+tracks/1/path = NodePath("Collider:scale")
 tracks/1/interp = 2
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -124,7 +123,7 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("Collision:position")
+tracks/3/path = NodePath("Collider:position")
 tracks/3/interp = 2
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -151,25 +150,6 @@ _data = {
 "RESET": SubResource("Animation_j8cx7"),
 "crouch": SubResource("Animation_5ec5e")
 }
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_xkv3f"]
-render_priority = 1
-shader = ExtResource("2_n6d4a")
-shader_parameter/enable_fog = true
-shader_parameter/fog_color = Color(0.941176, 0.831373, 0.635294, 1)
-shader_parameter/noise_color = Color(0.288627, 0.271554, 0.261308, 1)
-shader_parameter/fog_distance = 271.0
-shader_parameter/fog_fade_range = 270.0
-shader_parameter/enable_noise = true
-shader_parameter/noise_time_fac = 4.875
-shader_parameter/enable_color_limitation = true
-shader_parameter/color_levels = 128
-shader_parameter/enable_dithering = true
-shader_parameter/dither_strength = 0.154
-
-[sub_resource type="QuadMesh" id="QuadMesh_tbiar"]
-material = SubResource("ShaderMaterial_xkv3f")
-size = Vector2(2, 2)
 
 [sub_resource type="Animation" id="Animation_gh776"]
 resource_name = "RESET"
@@ -402,17 +382,17 @@ _data = {
 [sub_resource type="SphereShape3D" id="SphereShape3D_k4wwl"]
 radius = 0.2
 
-[node name="Player" type="CharacterBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
-collision_mask = 30
-script = ExtResource("1_5petg")
+[node name="FirstPersonCharacter" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.270291, 0)
+collision_mask = 126
+floor_max_angle = 1.0472
+script = ExtResource("1_aaow4")
 
 [node name="Mesh" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-visible = false
 mesh = SubResource("CapsuleMesh_jw1de")
 
-[node name="Collision" type="CollisionShape3D" parent="."]
+[node name="Collider" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_uy03j")
 
@@ -426,19 +406,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 
 [node name="Camera" type="Camera3D" parent="Head"]
 transform = Transform3D(1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0, 0, 0)
-visible = false
-environment = ExtResource("2_urgvr")
 current = true
-
-[node name="ShaderSurface" type="MeshInstance3D" parent="Head/Camera"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0328197, -0.939834)
-mesh = SubResource("QuadMesh_tbiar")
 
 [node name="HeadbobAnimation" type="AnimationPlayer" parent="Head"]
 libraries = {
 "": SubResource("AnimationLibrary_o0unb")
 }
-blend_times = [&"walk", &"RESET", 0.5, &"RESET", &"walk", 0.5, &"RESET", &"RESET", 0.5]
+blend_times = [&"RESET", &"RESET", 0.5, &"RESET", &"walk", 0.5, &"walk", &"RESET", 0.5]
 
 [node name="JumpAnimation" type="AnimationPlayer" parent="Head"]
 libraries = {
@@ -447,8 +421,10 @@ libraries = {
 speed_scale = 4.0
 
 [node name="CrouchCeilingDetection" type="ShapeCast3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.36798, 0)
 shape = SubResource("SphereShape3D_k4wwl")
 target_position = Vector3(0, 0, 0)
 collision_mask = 4
 collide_with_areas = true
+
+[node name="TextPanel" parent="." instance=ExtResource("2_2i34k")]

@@ -2,26 +2,27 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d1h161t0v6hau"
-path="res://.godot/imported/red.png-3cad0ca19141406d60f5fd2311159a86.ctex"
+uid="uid://dsv4jm4vydflb"
+path.s3tc="res://.godot/imported/orange.png-6b3e745c8add241de0d252a699729f75.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
-source_file="res://textures/red.png"
-dest_files=["res://.godot/imported/red.png-3cad0ca19141406d60f5fd2311159a86.ctex"]
+source_file="res://addons/SharperFPC/textures/orange.png"
+dest_files=["res://.godot/imported/orange.png-6b3e745c8add241de0d252a699729f75.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
@@ -31,4 +32,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

@@ -1,5 +1,61 @@
-# quality-godot-first-person-2
-Actually good first person controller for the Godot Engine.  
+# SharperFirstPersonController
+A cleaner implementation of [quality-first-person-controller-2](https://github.com/ColormaticStudios/quality-godot-first-person-2)
+[Click here for a link to the original asset.](https://godotengine.org/asset-library/asset/2418)
+
+## Versions:
+	- **1.0:** Initial release!
+		- Cleanup
+		- Object detection 
+		- Debug features moved to a single C# class (`TextPanel`)
+		- **BIG TODO: RETICLES**
+
+## Description
+This is a cleaner version of the C# translation of Quality First Person Controller v2. It improves over the original by:
+	- **Much** cleaner and understandable file structure.
+		- Project is split into 4 files, plus the debug TextPanel:
+			- CameraFirstPerson.cs: contains all variables shared by the class, a separate definition for your InputMap keys, and all code related to Godot's loops.
+			- CameraFirstPerson.Animation.cs: contains everything related to animation.
+			- CameraFirstPerson.Camera.cs: contains everything related to camera movement, motion smoothing, and other features.
+			- CameraFirstPerson.ItemDetection.cs: a new adition to this asset! Detects items with an Area3D in front of the camera's centre (where the Reticle would go).
+			- TextPanel.cs: script for the debug TextPanel.
+		- Functionality is split into smaller methods. Not a lot of them, but just enough to understand what's going on, and separate functionality away from the main file. Everything is made to ease readability.
+		- Code now complies (almost 100%) to C#'s code styleguides.
+	- Object detection!
+		- This project comes from a personal project, where I cleaned up and refactored the code. This is an extra feature that comes for free!
+			- Means that some of the terminology fits my needs, which sound weird out of context. Needs a bit of work in this aspect.
+		- Works by casting a ray from the camera centre to the nearest Area3D, and emits a ShowItem or HideItem signal (these are new to this asset).
+		- A `HideItem()` and `ShowItem()` signal will appear on the editor. Connect anything you need: `ShowItem()` works when an `Area3D` is detected, `HideItem()` when its not.
+		- In this case, I use a special Collision layer/mask pair assigned for this use. If you want to use this on your project, this is a good idea.
+	- Differences:
+		- Hooking up to controls.
+			- The original has a `Controls` exported category of strings, on which you wrote what you had on your own Project Settings.
+			- This is not ideal, and a next goal is to autodetect them, and disable functionality (like crouch, sprint, jump or pause) when it's not there.
+			- In the meantime, they're neatly in a single place at the top of `CameraFirstPerson.cs`, where you can wire them up on code.
+
+## why tho?
+The original had some abstractions that tripped the `SourceGenerator` of GodotSharp. This triggered a [rather obscure bug](https://github.com/godotengine/godot/issues/71102#issuecomment-2369199135) that almost made me lose a game jam. Although I made a lot of mistakes, this came out of nowhere. I removed a lot of abstractions and `[Export]` attributes, and it worked.
+
+Over the months I kept on working on the same camera for a remake of [Premonition](https://framebuffers.itch.io/premonition). This is the work I made there, extracyed and prepared to be used by someone else.
+
+Maybe this can be of use to someone else, so here it is!
+
+## to do:
+ - **RETICLES!!!**
+	- This one I didn't port originally, because I didn't need it at that time. But now is a good time to bring them back from the original.
+- **Controls**
+	- Like it was said above: the method to get `InputMap` string names has a lot of room for error. I want to try a smarter way to approach it.
+
+## Thanks!
+This codebase is possible by the work of a lot of people before me.
+- [Original by Colormatic Studios.](https://github.com/ColormaticStudios/quality-godot-first-person-2) Released under MIT License.
+- [Based on this asset by Zakarya on the Asset Library](https://godotengine.org/asset-library/asset/2418). Released under MIT License.
+- Original translation by LokoNeko. Released under MIT License. Lost the link so, if you find it, please send a PR my way and I'll add it!
+
+Released under MIT license.
+
+Here's the original README below!
+---
+Actually good first person controller for the Godot Engine.
 MIT License (credit Colormatic Studios)
 
 This first person controller was made because there aren't many first person controllers for Godot, and the ones that do exist are pretty bad.  
